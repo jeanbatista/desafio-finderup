@@ -1,0 +1,285 @@
+openapi: 3.0.3
+info:
+  title: FinderUp - API
+  description: Raw material control server
+  termsOfService: http://localhost
+  contact:
+    name: Jean Carlos Batista
+    email: jean.carlosbatistta@gmail.com
+  license:
+    name: ""
+    url: http://localhost
+  version: 1.0.1
+servers:
+  - url: http://localhost:{port}/{basePath}
+    description: Development Server
+    variables:
+      port:
+        enum:
+          - "3000"
+        default: "3000"
+      basePath:
+        default: api/v1
+  - url: https://jcbsistemas.com.br:{port}/{basePath}
+    description: Production Server
+    variables:
+      port:
+        enum:
+          - "3000"
+        default: "3000"
+      basePath:
+        default: api/v1
+tags:
+  - name: Login
+  - name: Materials
+paths:
+  /login:
+    post:
+      tags:
+        - Login
+      summary: Autentica na api
+      operationId: postLogin
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+        required: true
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+        401:
+          description: Usuário inválido
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/apiResponse"
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/apiResponse"
+  /materials:
+    get:
+      tags:
+        - Materials
+      summary: Return raw materials
+      operationId: getMaterials
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - in: query
+          name: name
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: user
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: page
+          required: false
+          schema:
+            type: number
+        - in: query
+          name: limit
+          required: false
+          schema:
+            type: number
+      responses:
+        200:
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/material"
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/apiResponse"
+    post:
+      tags:
+        - Materials
+      summary: Create raw material
+      operationId: postMaterial
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nome:
+                  type: string
+                quantity:
+                  type: number
+                user:
+                  type: string
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: number
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/apiResponse"
+  /materials/{id}:
+    get:
+      tags:
+        - Materials
+      summary: Return raw material
+      operationId: getMaterial
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: number
+      responses:
+        200:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/material"
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/apiResponse"
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/apiResponse"
+    delete:
+      tags:
+        - Materials
+      summary: Removes raw material
+      operationId: deleteMaterial
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: number
+      security:
+        - ApiKeyAuth: []
+      responses:
+        200:
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: string
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/apiResponse"
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/apiResponse"
+  /materials/{id}/quantities:
+    patch:
+      tags:
+        - Materials
+      summary: Updates raw material quantity
+      operationId: patchMaterialQuantity
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: number
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                quantity:
+                  type: number
+      responses:
+        200:
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: string
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/apiResponse"
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/apiResponse"
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+  schemas:
+    apiResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+        error:
+          type: string
+    material:
+      type: object
+      properties:
+        id:
+          type: number
+        nome:
+          type: string
+        quantity:
+          type: number
+        user:
+          type: string

@@ -1,0 +1,15 @@
+{
+    "ENV": "development",
+    "SERVER": {
+        "HOST": "localhost",
+        "PORT": 3000
+    },
+    "DB": {
+        "MONGO": "mongodb://root:root@localhost:27017/finderup?authSource=admin&readPreference=primary&appname=MongoDB%20Compass&ssl=false"
+    },
+    "USER": {
+        "USERNAME": "finder",
+        "PASSWORD": "up123456",
+        "CERT": "5c9a4b7c-6003-11eb-ae93-0242ac130002"
+    }
+}

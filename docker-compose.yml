@@ -1,0 +1,20 @@
+version: "3.1"
+services:
+  db-hml-finderup:
+    image: mongo
+    restart: always
+    container_name: db-hml-finderup
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+  api-hml-finderup:
+    build: .
+    image: finderup-api:hml
+    restart: on-failure
+    container_name: api-hml-finderup
+    ports:
+      - 3000:3000
+    environment:
+      NODE_ENV: hml
