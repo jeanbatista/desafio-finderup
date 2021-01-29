@@ -1,5 +1,7 @@
 'use strict';
 
+const dateFormat = require('dateformat');
+
 const MaterialRepository = require('../repositories/materialRepository');
 
 const { NotFoundException } = require('../exceptions');
@@ -51,7 +53,9 @@ module.exports = class MaterialService {
         const material = await this.#materialRepo.findByID(id);
         if (!material) throw new NotFoundException('Raw material not found');
 
-        await this.#materialRepo.updateQuantity(id, obj.quantity);
+        material.quantity = obj.quantity;
+        material.user = obj.user;
+        await this.#materialRepo.updateQuantity(id, material);
         return 'Quantity updated successfully';
     }
 
@@ -60,7 +64,8 @@ module.exports = class MaterialService {
             id: material.id,
             name: material.name,
             quantity: material.quantity,
-            user: material.user
+            user: material.user,
+            createdDate: dateFormat(material.createdDate, 'yyyy-mm-dd')
         };
     }
 }

@@ -127,7 +127,7 @@ paths:
             schema:
               type: object
               properties:
-                nome:
+                name:
                   type: string
                 quantity:
                   type: number
@@ -237,6 +237,8 @@ paths:
               properties:
                 quantity:
                   type: number
+                user:
+                  type: string
       responses:
         200:
           description: ""
@@ -282,4 +284,6 @@ components:
         quantity:
           type: number
         user:
+          type: string
+        createdDate:
           type: string

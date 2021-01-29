@@ -29,7 +29,8 @@ module.exports = class MaterialRepository {
                     id: item.id,
                     name: item.name,
                     quantity: item.quantity,
-                    user: item.user
+                    user: item.user,
+                    createdDate: item.createdDate
                 };
             })
         };
@@ -65,11 +66,11 @@ module.exports = class MaterialRepository {
     /**
      * 
      * @param {Number} id 
-     * @param {Number} quantity 
+     *  @param {{ name:string,quantity:Number,user:string }} obj 
      * @return {Promise<void>}
      */
-    async updateQuantity(id, quantity) {
-        await this.#model.updateOne({ id: id }, { quantity });
+    async updateQuantity(id, obj) {
+        await this.#model.updateOne({ id: id }, obj);
     }
 
     /**
